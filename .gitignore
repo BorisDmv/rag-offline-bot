@@ -1,0 +1,70 @@
+# Python bytecode files
+*.pyc
+__pycache__/
+.ipynb_checkpoints
+
+# Virtual environment
+.venv/
+venv/
+env/
+envs/
+*/env/
+*/venv/
+*/envs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Data and large files (Good practice to exclude, but may depend on your project)
+*.csv
+*.parquet
+*.json
+# my_data/  # If you have a data folder, you might want to exclude the whole folder, or just some files in it
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Data and large files (Good practice to exclude, but may depend on your project)
+*.csv
+*.parquet
+*.json
+rag_text_chunks.csv # Exclude the rag_text_chunks.csv file
+
+# Dependency cache
+/node_modules
+/build
+/dist
+/target
+/out
+
+# Sentence Transformers cache.  Generally, let the library manage this.
+# /Users/boris-laptop/.cache/torch/sentence_transformers/  #  Remove this line
+
+# Environment variable files
+.env
+*config.yaml
+*config.yml
+secrets.json
+private_key.pem
+
+# Jupyter Notebook
+# *.ipynb # Consider if you want to include the notebooks themselves, but exclude checkpoints
+# /notebooks/*.ipynb # exclude all notebooks
+# !/notebooks/important.ipynb # include this specific notebook
+
+#Ignore all .txt files, but include only important.txt
+!important.txt
