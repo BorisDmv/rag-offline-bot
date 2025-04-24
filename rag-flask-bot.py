@@ -75,7 +75,7 @@ def rag_respond(user_input, top_k=3):
         documents = pd.read_csv(CSV_PATH)["content"].tolist() # Reload documents to ensure consistency
         context = "\n".join([f"- {documents[i]}" for i in indices[0]])
 
-        prompt = f"""You are a helpful assistant. Use the following information to answer the user's question as clearly and helpfully as possible.
+        prompt = f"""You are a helpful assistant. **Answer the user's question ONLY using the information provided in the following knowledge base.** If the answer cannot be found within the knowledge base, respond with a polite decline, such as "I'm sorry, but I cannot answer that question based on the information I have." or "According to the provided information, I cannot answer that question."
 
     Knowledge Base:
     {context}
