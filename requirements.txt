@@ -4,4 +4,6 @@ faiss-cpu==1.10.0
 sentence-transformers==4.1.0
 llama-cpp-python==0.3.8
 python-dotenv==1.1.0
-torch==2.0.6
+torch==2.6.0
+Flask==3.1.0
+flask_cors==5.0.1

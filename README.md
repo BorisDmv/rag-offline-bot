@@ -46,6 +46,12 @@ This project implements an offline Retrieval-Augmented Generation (RAG) chatbot 
 
     * The current implementation expects the document chunks to be in a CSV file named `rag_text_chunks.csv` with a column named "content". You'll need to pre-process your documents into suitable chunks and save them in this format. This process is outside the scope of this README.
 
+    Optional: For developmenmt just generate certificate to run the flask serverin https
+
+    ```bash
+    openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+    ```
+
 4.  **Run the chatbot:**
 
     ```bash
