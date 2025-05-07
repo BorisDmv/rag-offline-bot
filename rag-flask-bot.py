@@ -7,6 +7,9 @@ from sentence_transformers import SentenceTransformer
 from llama_cpp import Llama
 from flask import Flask, request, jsonify, g
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from redis import Redis
 
 load_dotenv()
 
@@ -16,13 +19,26 @@ CSV_PATH = os.getenv("CSV_PATH")
 # --------------------------------------------
 
 app = Flask(__name__)
+# Initialize Redis connection
+redis_connection = Redis(host='localhost', port=6379, db=0)
+
+# Set up rate limiting
+limiter = Limiter(
+    key_func=get_remote_address,
+    storage_uri="redis://localhost:6379",  # Make sure Redis is running
+    app=app
+)
+
 CORS(app, resources={r"/chat": {"origins": "*"}}) # Changed to '*' for easier testing
 
 def get_embedder():
     if 'embedder' not in g:
         print("Loading embedding model...")
         g.embedder = SentenceTransformer("all-MiniLM-L6-v2")
-        print(g.embedder)
+        if g.embedder.device.type != "cuda":
+            print("Moving embedder to CUDA...")
+            g.embedder = g.embedder.to("cuda")
+        print(f"Embedder loaded on device: {g.embedder.device}")
     return g.embedder
 
 def get_faiss_index():
@@ -49,7 +65,7 @@ def get_llm():
     if 'llm' not in g:
         print("Loading Mistral model from GGUF...")
         try:
-            g.llm = Llama(model_path=GGUF_MODEL_PATH, n_ctx=2048, n_threads=6)
+            g.llm = Llama(model_path=GGUF_MODEL_PATH, n_gpu_layers=-1, n_batch=512)
         except FileNotFoundError:
             print(f"Error: GGUF model not found at {GGUF_MODEL_PATH}")
             return None
@@ -91,6 +107,7 @@ def rag_respond(user_input, top_k=3):
         return f"An error occurred during the RAG process: {e}"
 
 @app.route('/chat', methods=['POST'])
+@limiter.limit("1 per minute")
 def chat():
     data = request.get_json()
     if not data or 'user_input' not in data:
@@ -104,5 +121,11 @@ def chat():
 def index():
     return "Offline RAG Chatbot API is running. Send POST requests to /chat with {'user_input': 'your question'}."
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=9090, ssl_context=('cert.pem', 'key.pem'))
+
+## For local testing if you want to run the app with SSL, uncomment the following lines and provide your cert and key files:
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0', port=9090, ssl_context=('cert.pem', 'key.pem'))
+
+## For local testing without SSL, use the following line:
+# if __name__ == "__main__":
+#     app.run(host='0.0.0.0', port=9090)

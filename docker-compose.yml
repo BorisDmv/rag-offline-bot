@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    image: flask-rag-app:latest
+    container_name: flask_rag_app
+    env_file:
+      - .env
+    environment:
+      - GGUF_MODEL_PATH=${GGUF_MODEL_PATH}
+      - CSV_PATH=${CSV_PATH}
+      - REDIS_URL=redis://redis:6379
+      - RATE_LIMIT=${RATE_LIMIT}
+    volumes:
+      # Mount local model and data directories into container
+      - ./models:/models    # <-- Host folder `models/` holds GGUF model files
+      - ./data:/data        # <-- Host folder `data/` holds CSV and other data files
+      - .:/app              # <-- Mount code for hot-reload (optional for dev)
+    ports:
+      - "9090:9090"         # Expose Flask API on port 9090
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    # Optional: add a healthcheck to ensure Redis is ready before app starts
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  # Define named volumes if needed (optional)
+  app_data: {}

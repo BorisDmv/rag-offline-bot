@@ -1,0 +1,44 @@
+# Ignore virtual environment directories
+.venv/
+env/
+venv/
+
+# Ignore Python bytecode and cache files
+*.pyc
+__pycache__/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Ignore local environment files (secrets, configs)
+.env
+*.config.yml
+*.config.yaml
+secrets.json
+private_key.pem
+
+# Ignore large or unnecessary data files
+*.csv
+*.parquet
+*.json
+rag_text_chunks.csv
+
+# Ignore other temporary files
+*.log
+temp/
+tmp/
+*.tmp
+
+# Ignore build, dist, and node_modules directories
+/build
+/dist
+/node_modules
