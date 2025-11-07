@@ -24,6 +24,15 @@ Thumbs.db
 *.parquet
 *.json
 # my_data/  # If you have a data folder, you might want to exclude the whole folder, or just some files in it
+ 
+# Ignore model files
+models/
+
+# Ignore redis data
+redis-data/
+
+# Ignore data folder
+data/
 
 # Temporary files
 temp/

@@ -12,6 +12,7 @@ load_dotenv()
 GGUF_MODEL_PATH = os.getenv("GGUF_MODEL_PATH")
 CSV_PATH = os.getenv("CSV_PATH")
 # --------------------------------------------
+documents = pd.read_csv(CSV_PATH)["content"].tolist()
 
 # Load CSV
 df = pd.read_csv(CSV_PATH)
