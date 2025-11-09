@@ -98,6 +98,10 @@ Run the container:
 docker run -p 9090:9090 --env-file .env rag-bot
 ```
 
+```bash
+docker compose up --build
+```
+
 This uses `gunicorn` for serving via:
 
 ```
